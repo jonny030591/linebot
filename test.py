@@ -10,15 +10,12 @@ import random
 
 app = Flask(__name__)
 
-# LINE 聊天機器人的基本資料
 with open('setting.json','r',encoding='utf8') as jfile:
     jdata=json.load(jfile)
 
 line_bot_api = LineBotApi(jdata['TOKEN'])
 handler = WebhookHandler(jdata['channel'])
 
-
-# 接收 LINE 的資訊
 @app.route("/callback", methods=['POST'])
 def callback():
     signature = request.headers['X-Line-Signature']
@@ -35,20 +32,12 @@ def callback():
 
     return 'OK'
 
-# 學你說話
 @handler.add(MessageEvent, message=TextMessage)
 def pretty_echo(event):
     
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":
         
-        # Phoebe 愛唱歌
-        pretty_note = '♫♪♬'
-        pretty_text = ''
-        
-        for i in event.message.text:
-        
-            pretty_text += i
-            pretty_text += random.choice(pretty_note)
+        pretty_text = event.message.text
     
         line_bot_api.reply_message(
             event.reply_token,
